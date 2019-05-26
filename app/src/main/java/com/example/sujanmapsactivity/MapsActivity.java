@@ -3,12 +3,17 @@ package com.example.sujanmapsactivity;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.example.sujanmapsactivity.Model.LatitudeLongitude;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -39,8 +44,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        List<LatitudeLongitude> latLngs = new ArrayList<>();
+        latLngs.add(new LatitudeLongitude(27.7052354, 85.3294158, "Softwarica College"));
+        latLngs.add(new LatitudeLongitude(27.721569, 85.379747, "My Home"));
+
+
+        CameraUpdate center, zoom;
+        for (int i = 0; i < latLngs.size(); i++) {
+            center =
+                    CameraUpdateFactory.newLatLng(new LatLng(latLngs.get(i).getLat(),
+                            latLngs.get(i).getLon()));
+
+            zoom = CameraUpdateFactory.zoomTo(16);
+            mMap.addMarker(new MarkerOptions().position(new LatLng(latLngs.get(i).getLat(),
+                    latLngs.get(i).getLon())).title(latLngs.get(i).getMarker()));
+
+            mMap.moveCamera(center);
+            mMap.animateCamera(zoom);
+            mMap.getUiSettings().setZoomControlsEnabled(true);
+
+
+        }
     }
 }
